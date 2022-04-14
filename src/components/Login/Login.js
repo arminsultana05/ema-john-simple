@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import './Login.css'
-import logo from '../../images/googl.png'
-import { Link, useNavigate } from 'react-router-dom';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSignInWithEmailAndPassword} from 'react-firebase-hooks/auth';
 import auth from '../../firebasa.init';
-
-
 const Login = () => {
     const [email, setEmail]= useState('');
     const [password, setPassword]= useState('')
     const navigate = useNavigate();
+    const location =useLocation();
+    const from = location.state?.from?.pathname || '/';
+
     const [
         signInWithEmailAndPassword,
         user,
         loading,
         error,
       ] = useSignInWithEmailAndPassword(auth);
-      const [signInWithGoogle] = useSignInWithGoogle(auth)
-
+     
     const haldleEmailBlur = event =>{
         setEmail(event.target.value)
     }
@@ -25,7 +25,7 @@ const Login = () => {
         setPassword(event.target.value);
     }
     if(user){
-        navigate('/shop')
+        navigate(from,{replace: true});
     }
     const handleUserSignin=event=>{
         event.preventDefault();
@@ -68,17 +68,8 @@ const Login = () => {
 
                     {/* <span>Create New Account</span> */}
                 </p>
-                <div className='horizontal-divider'>
-                    <div className='line-left' />
-                    <p>or</p>
-                    <div className='line-right' />
-                </div>
-                <div className='input-wrapper'>
-                    <button onClick={()=>signInWithGoogle()} className='google-auth' >
-                        <img src={logo} alt='' />
-                        <p> Continue with Google </p>
-                    </button>
-                </div>
+               
+                
             </div>
         </div>
     );
